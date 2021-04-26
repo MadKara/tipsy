@@ -52,6 +52,12 @@ class CalculatorViewController: UIViewController {
         print(tip)
         print(numberOfPeople)
         print(bill)
+        
+        let tipAmount = bill * tip
+        let totalBill = bill + tipAmount
+        let dividedTotalBill = totalBill / Double(numberOfPeople)
+        
+        print(String(format: "%.2f", dividedTotalBill))
     }
     
     func getBill(){
