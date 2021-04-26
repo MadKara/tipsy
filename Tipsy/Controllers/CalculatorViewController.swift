@@ -21,6 +21,7 @@ class CalculatorViewController: UIViewController {
     var tip = 0.1
     var numberOfPeople = 2
     var bill = 0.0
+    var result = 0.0
     
 
     @IBAction func tipChanged(_ sender: UIButton) {
@@ -32,10 +33,8 @@ class CalculatorViewController: UIViewController {
         
         let titleButton = sender.currentTitle ?? "0.0%"
         let changedTitleButton = String(titleButton.dropLast())
-        
         let convertedTitleButton = Double(changedTitleButton)!
         tip = convertedTitleButton / 100
-
     }
     
     
@@ -47,29 +46,33 @@ class CalculatorViewController: UIViewController {
     }
     
     @IBAction func calculatePressed(_ sender: UIButton) {
-        getBill()
         
-        print(tip)
-        print(numberOfPeople)
-        print(bill)
+        if let value = billTextField.text{
+            bill = Double(value) ?? 0.0
+        }
         
         let tipAmount = bill * tip
         let totalBill = bill + tipAmount
         let dividedTotalBill = totalBill / Double(numberOfPeople)
         
-        print(String(format: "%.2f", dividedTotalBill))
-    }
-    
-    func getBill(){
-        if let value = billTextField.text{
-            bill = Double(value) ?? 0.0
-        }
+        result = dividedTotalBill
+        
+        self.performSegue(withIdentifier: "goToResults", sender: self)
     }
     
     func clearSelectedState(){
         zeroPctButton.isSelected = false
         tenPctButton.isSelected = false
         twentyPctButton.isSelected = false
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToResults"{
+            let destinationVC = segue.destination as! ResultsViewController
+            destinationVC.result = result
+            destinationVC.tipPercentage = tip
+            destinationVC.numberOfPeople = numberOfPeople
+        }
     }
 }
 
